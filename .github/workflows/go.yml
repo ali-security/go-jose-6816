@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ '**' ]
+    branches: ['**']
   pull_request:
-    branches: [ '**' ]
+    branches: ['**']
 
 jobs:
   build:
@@ -12,32 +12,32 @@ jobs:
       fail-fast: false
       matrix:
         GO_VERSION:
-          - "1.24.x"
-          - "1.25.x"
-    runs-on: ubuntu-latest
+          - 1.24.x
+          - 1.25.x
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v5
-      with:
-        persist-credentials: false
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
-    - name: Set up Go ${{ matrix.GO_VERSION }}
-      uses: actions/setup-go@v6
-      with:
-        go-version: "${{ matrix.GO_VERSION }}"
+      - name: Set up Go ${{ matrix.GO_VERSION }}
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.GO_VERSION }}
 
-    - name: Build
-      run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...
 
   govulncheck:
     strategy:
       matrix:
         GO_VERSION:
           # We only need to test vulns on one version
-          - "1.25.x"
-    runs-on: ubuntu-latest
+          - 1.25.x
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
         with:
@@ -49,7 +49,7 @@ jobs:
           # When Go produces a security release, we want govulncheck to run
           # against the most recently released Go version.
           check-latest: true
-          go-version: "${{ matrix.GO_VERSION }}"
+          go-version: ${{ matrix.GO_VERSION }}
 
       - name: Run govulncheck
         run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
